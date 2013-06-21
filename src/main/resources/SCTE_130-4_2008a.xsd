@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.scte.org/schemas/130-4/2008a/cis"
+	xmlns:core="http://www.scte.org/schemas/130-2/2008a/core" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" targetNamespace="http://www.scte.org/schemas/130-4/2008a/cis">
+	<!-- Import of CORE namespace -->
+	<xsd:import namespace="http://www.scte.org/schemas/130-2/2008a/core"
+		schemaLocation="SCTE_130-2_2008a.xsd" />
+	<!-- CIS List Content Request and Response types -->
+	<xsd:element name="ContentQueryRequest" type="ContentQueryRequestType" />
+	<xsd:element name="ContentQueryResponse" type="ContentQueryResponseType" />
+	<!-- Cursor related items -->
+	<xsd:element name="CreateCursorRequest" type="CreateCursorRequestType" />
+	<xsd:element name="CreateCursorResponse" type="CreateCursorResponseType" />
+	<xsd:element name="CancelCursorRequest" type="CancelCursorRequestType" />
+
+	<xsd:element name="CancelCursorResponse" type="CancelCursorResponseType" />
+	<!-- CIS ContentRegistration Request, Response, Deregister and List types -->
+	<xsd:element name="ContentNotificationRegistrationRequest"
+		type="ContentNotificationRegistrationRequestType" />
+	<xsd:element name="ContentNotificationRegistrationResponse"
+		type="ContentNotificationRegistrationResponseType" />
+	<xsd:element name="ContentNotificationDeregisterRequest"
+		type="ContentNotificationDeregisterRequestType" />
+	<xsd:element name="ContentNotificationDeregisterResponse"
+		type="ContentNotificationDeregisterResponseType" />
+	<xsd:element name="ContentNotificationSelector" type="ContentNotificationSelectorType" />
+	<xsd:element name="ListContentNotificationRegistrationRequest"
+		type="ListContentNotificationRegistrationRequestType" />
+	<xsd:element name="ListContentNotificationRegistrationResponse"
+		type="ListContentNotificationRegistrationResponseType" />
+
+	<xsd:element name="DeregistrationNotification" type="DeregistrationNotificationType" />
+	<xsd:element name="DeregistrationAcknowledgement" type="DeregistrationAcknowledgementType" />
+	<!-- CIS Content Notification and Acknowledgement types -->
+	<xsd:element name="ContentNotification" type="ContentNotificationType" />
+	<xsd:element name="ContentNotificationAcknowledgement"
+		type="ContentNotificationAcknowledgementType" />
+	<!-- CIS supported features -->
+	<xsd:element name="ListSupportedFeaturesRequest" type="ListSupportedFeaturesRequestType" />
+	<xsd:element name="ListSupportedFeaturesResponse" type="ListSupportedFeaturesResponseType" />
+	<!-- Misc CIS types -->
+
+	<xsd:element name="QueryFilter" type="QueryFilterType" />
+	<xsd:element name="FilterElement" type="FilterElementType" />
+	<xsd:element name="AdvancedFilterElement" type="AdvancedFilterElementType" />
+	<xsd:element name="AdvancedQueryResult" type="AdvancedQueryResultType" />
+	<xsd:element name="AdvancedQueryResultList" type="AdvancedQueryResultListType" />
+	<xsd:element name="BasicQueryResultList" type="BasicQueryResultListType" />
+	<xsd:element name="DataModelList" type="DataModelListType" />
+	<xsd:element name="AdvancedQueryLanguageList" type="AdvancedQueryLanguageListType" />
+	<xsd:element name="AdvancedQueryLanguage" type="AdvancedQueryLanguageType" />
+
+	<xsd:element name="ContentQuery" type="ContentQueryType" />
+	<xsd:element name="ContentQueryResult" type="ContentQueryResultType" />
+	<xsd:element name="Cursor" type="CursorType" />
+	<!-- ============== -->
+	<!-- Part 4 basic types -->
+	<!-- ============== -->
+	<xsd:simpleType name="expandOutputAttrType">
+		<xsd:annotation>
+			<xsd:documentation>Expanded output indicator.</xsd:documentation>
+
+		</xsd:annotation>
+		<xsd:restriction base="xsd:boolean" />
+	</xsd:simpleType>
+	<xsd:simpleType name="queryIdAttrType">
+		<xsd:annotation>
+			<xsd:documentation>Original query identifier.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="core:nonEmptyStringType" />
+
+	</xsd:simpleType>
+	<xsd:simpleType name="queryIdRefAttrType">
+		<xsd:annotation>
+			<xsd:documentation>Reference to original query.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="queryIdAttrType" />
+	</xsd:simpleType>
+	<xsd:simpleType name="cursorIdAttrType">
+
+		<xsd:annotation>
+			<xsd:documentation>Original cursor identifier.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="core:nonEmptyStringType" />
+	</xsd:simpleType>
+	<xsd:simpleType name="cursorIdRefAttrType">
+		<xsd:annotation>
+			<xsd:documentation>Reference to original cursor.</xsd:documentation>
+
+		</xsd:annotation>
+		<xsd:restriction base="cursorIdAttrType" />
+	</xsd:simpleType>
+	<xsd:simpleType name="cursorExpiresAttrType">
+		<xsd:annotation>
+			<xsd:documentation>Cursor expires attribute type.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="core:dateTimeTimezoneType" />
+
+	</xsd:simpleType>
+	<xsd:simpleType name="filterElementNameType">
+		<xsd:annotation>
+			<xsd:documentation>Name attribute value.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="core:nonEmptyStringType" />
+	</xsd:simpleType>
+	<xsd:simpleType name="filterElementValueType">
+
+		<xsd:annotation>
+			<xsd:documentation>Value attribute value.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="core:nonEmptyStringType" />
+	</xsd:simpleType>
+	<xsd:simpleType name="queryLanguageAttrType">
+		<xsd:annotation>
+			<xsd:documentation>Query language attribute value.
+			</xsd:documentation>
+
+		</xsd:annotation>
+		<xsd:restriction base="core:nonEmptyStringType" />
+	</xsd:simpleType>
+	<!-- ======================= -->
+	<!-- AdvancedQueryLanguageType -->
+	<!-- ======================= -->
+	<xsd:complexType name="AdvancedQueryLanguageType">
+		<xsd:simpleContent>
+			<xsd:extension base="core:nonEmptyStringType">
+
+				<xsd:attribute name="version" type="core:nonEmptyStringType"
+					use="optional">
+					<xsd:annotation>
+						<xsd:documentation>Advanced query language version information.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+	<!-- ========================== -->
+	<!-- ListSupportedFeaturesRequestType -->
+	<!-- ========================== -->
+	<xsd:complexType name="ListSupportedFeaturesRequestType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_RequestBaseType">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- =========================== -->
+	<!-- ListSupportedFeaturesResponseType -->
+	<!-- =========================== -->
+	<xsd:complexType name="ListSupportedFeaturesResponseType">
+		<xsd:complexContent>
+
+			<xsd:extension base="core:Msg_ResponseBaseType">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0"
+						ref="core:Callout" />
+					<xsd:element minOccurs="0" ref="DataModelList" />
+					<xsd:element minOccurs="0" ref="AdvancedQueryLanguageList" />
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ================= -->
+	<!-- ContentNotificationType -->
+	<!-- ================= -->
+	<xsd:complexType name="ContentNotificationType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_NotificationBaseType">
+				<xsd:sequence>
+
+					<xsd:element ref="ContentQueryResult" />
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:attribute name="type"
+					type="contentNotificationTypeEnumeration" use="required" />
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ========================== -->
+
+	<!-- ContentNotificationTypeEnumeration -->
+	<!-- ========================== -->
+	<xsd:simpleType name="contentNotificationTypeEnumeration">
+		<xsd:annotation>
+			<xsd:documentation>One of "new", "update" or "remove"
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="core:nonEmptyStringType">
+			<xsd:enumeration value="new" />
+
+			<xsd:enumeration value="update" />
+			<xsd:enumeration value="remove" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- =============================== -->
+	<!-- ContentNotificationAcknowledgementType -->
+	<!-- =============================== -->
+	<xsd:complexType name="ContentNotificationAcknowledgementType">
+		<xsd:complexContent>
+
+			<xsd:extension base="core:Msg_AcknowledgementBaseType">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ======================= -->
+
+	<!-- ContentNotificationSelectorType -->
+	<!-- ======================= -->
+	<xsd:complexType name="ContentNotificationSelectorType">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" ref="core:ContentDataModel" />
+			<xsd:element maxOccurs="unbounded" ref="QueryFilter" />
+		</xsd:sequence>
+		<xsd:attribute name="queryId" type="queryIdAttrType"
+			use="required" />
+		<xsd:attribute name="expandOutput" type="expandOutputAttrType"
+			use="optional" />
+
+	</xsd:complexType>
+	<!-- ================================ -->
+	<!-- ContentNotificationRegistrationRequestType -->
+	<!-- ================================ -->
+	<xsd:complexType name="ContentNotificationRegistrationRequestType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_RequestBaseType">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" ref="core:Callout" />
+
+					<xsd:element ref="ContentNotificationSelector" />
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ================================= -->
+	<!-- ContentNotificationRegistrationResponseType -->
+
+	<!-- ================================= -->
+	<xsd:complexType name="ContentNotificationRegistrationResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_ResponseBaseType">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- =================================== -->
+	<!-- ListContentNotificationRegistrationRequestType -->
+	<!-- =================================== -->
+	<xsd:complexType name="ListContentNotificationRegistrationRequestType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_RequestBaseType">
+				<xsd:sequence>
+
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:attribute name="registrationRef" type="core:nonEmptyStringType"
+					use="optional" />
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ==================================== -->
+	<!-- ListContentNotificationRegistrationResponseType -->
+
+	<!-- ==================================== -->
+	<xsd:complexType name="ListContentNotificationRegistrationResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_ResponseBaseType">
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" minOccurs="0"
+						ref="ContentNotificationRegistrationRequest" />
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ====================== -->
+	<!-- DeregistrationNotificationType -->
+	<!-- ====================== -->
+	<xsd:complexType name="DeregistrationNotificationType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_NotificationBaseType">
+
+				<xsd:sequence>
+					<xsd:element minOccurs="0" ref="core:StatusCode" />
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:attribute name="registrationRef" type="core:nonEmptyStringType"
+					use="optional" />
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- =========================== -->
+	<!-- DeregistrationAcknowledgementType -->
+	<!-- =========================== -->
+	<xsd:complexType name="DeregistrationAcknowledgementType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_AcknowledgementBaseType">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- =============================== -->
+	<!-- ContentNotificationDeregisterRequestType -->
+	<!-- =============================== -->
+	<xsd:complexType name="ContentNotificationDeregisterRequestType">
+		<xsd:complexContent>
+
+			<xsd:extension base="core:Msg_RequestBaseType">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:attribute name="registrationRef" type="core:nonEmptyStringType"
+					use="optional" />
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- ================================ -->
+	<!-- ContentNotificationDeregisterResponseType -->
+	<!-- ================================ -->
+	<xsd:complexType name="ContentNotificationDeregisterResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_ResponseBaseType">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- =================== -->
+	<!-- ContentQueryRequestType -->
+	<!-- =================== -->
+	<xsd:complexType name="ContentQueryRequestType">
+		<xsd:complexContent>
+
+			<xsd:extension base="core:Msg_RequestBaseType">
+				<xsd:sequence>
+					<xsd:choice>
+						<xsd:element ref="Cursor" />
+						<xsd:element ref="ContentQuery" />
+					</xsd:choice>
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ===================== -->
+	<!-- ContentQueryResponseType -->
+	<!-- ===================== -->
+	<xsd:complexType name="ContentQueryResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_ResponseBaseType">
+
+				<xsd:sequence>
+					<xsd:element minOccurs="0" ref="ContentQueryResult" />
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- =================== -->
+
+	<!-- CreateCursorRequestType -->
+	<!-- =================== -->
+	<xsd:complexType name="CreateCursorRequestType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_RequestBaseType">
+				<xsd:sequence>
+					<xsd:element ref="ContentQuery" />
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+
+				<xsd:attribute name="cursorId" type="cursorIdAttrType"
+					use="required" />
+				<xsd:attribute name="cursorExpires" type="cursorExpiresAttrType"
+					use="required" />
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ===================== -->
+	<!-- CreateCursorResponseType -->
+	<!-- ===================== -->
+
+	<xsd:complexType name="CreateCursorResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_ResponseBaseType">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:attribute name="resultSetSize" type="xsd:nonNegativeInteger"
+					use="required" />
+				<xsd:attribute name="cursorExpires" type="cursorExpiresAttrType"
+					use="required" />
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- =================== -->
+	<!-- CancelCursorRequestType -->
+	<!-- =================== -->
+	<xsd:complexType name="CancelCursorRequestType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_RequestBaseType">
+
+				<xsd:sequence>
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:attribute name="cursorRef" type="cursorIdRefAttrType"
+					use="required" />
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ===================== -->
+
+	<!-- CancelCursorResponseType -->
+	<!-- ===================== -->
+	<xsd:complexType name="CancelCursorResponseType">
+		<xsd:complexContent>
+			<xsd:extension base="core:Msg_ResponseBaseType">
+				<xsd:sequence>
+					<xsd:element minOccurs="0" ref="core:Ext" />
+				</xsd:sequence>
+				<xsd:anyAttribute namespace="##any"
+					processContents="lax" />
+
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<!-- ========= -->
+	<!-- CursorType -->
+	<!-- ========= -->
+	<xsd:complexType name="CursorType">
+		<xsd:attribute name="cursorRef" type="cursorIdRefAttrType"
+			use="required" />
+		<xsd:attribute name="contentQueryRef" type="queryIdAttrType"
+			use="required" />
+
+		<xsd:attribute name="startIndex" type="xsd:nonNegativeInteger"
+			use="required" />
+		<xsd:attribute name="count" type="xsd:nonNegativeInteger"
+			use="required" />
+	</xsd:complexType>
+	<!-- ============== -->
+	<!-- ContentQueryType -->
+	<!-- ============== -->
+	<xsd:complexType name="ContentQueryType">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" ref="core:ContentDataModel" />
+
+			<xsd:element maxOccurs="unbounded" ref="QueryFilter" />
+		</xsd:sequence>
+		<xsd:attribute name="contentQueryId" type="queryIdAttrType"
+			use="required" />
+		<xsd:attribute name="expandOutput" type="expandOutputAttrType" />
+	</xsd:complexType>
+	<!-- =================== -->
+	<!-- BasicQueryResultListType -->
+	<!-- =================== -->
+	<xsd:complexType name="BasicQueryResultListType">
+
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0"
+				ref="core:Content" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- ==================== -->
+	<!-- AdvancedQueryResultType -->
+	<!-- ==================== -->
+	<xsd:complexType name="AdvancedQueryResultType">
+		<xsd:simpleContent>
+
+			<xsd:extension base="core:nonEmptyStringType">
+				<xsd:attribute name="queryRef" type="queryIdRefAttrType"
+					use="required" />
+				<xsd:attribute name="mediaAvailable" type="core:mediaAvailableAttrType"
+					use="optional" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<!-- ====================== -->
+	<!-- AdvancedQueryResultListType -->
+	<!-- ====================== -->
+
+	<xsd:complexType name="AdvancedQueryResultListType">
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" minOccurs="0"
+				ref="AdvancedQueryResult" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- ================= -->
+	<!-- DataModelListType -->
+	<!-- ================= -->
+	<xsd:complexType name="DataModelListType">
+
+		<xsd:sequence>
+			<xsd:element maxOccurs="unbounded" ref="core:ContentDataModel" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- ========================= -->
+	<!-- AdvancedQueryLanguageListType -->
+	<!-- ========================= -->
+	<xsd:complexType name="AdvancedQueryLanguageListType">
+		<xsd:sequence>
+
+			<xsd:element maxOccurs="unbounded" ref="AdvancedQueryLanguage" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- ================== -->
+	<!-- ContentQueryResultType -->
+	<!-- ================== -->
+	<xsd:complexType name="ContentQueryResultType">
+		<xsd:sequence>
+			<xsd:choice>
+
+				<xsd:element ref="BasicQueryResultList" />
+				<xsd:element ref="AdvancedQueryResultList" />
+			</xsd:choice>
+		</xsd:sequence>
+		<xsd:attribute name="contentQueryRef" type="core:nonEmptyStringType"
+			use="required" />
+		<xsd:attribute name="resultSetSize" type="xsd:nonNegativeInteger"
+			use="required" />
+	</xsd:complexType>
+	<!-- ============= -->
+	<!-- FilterElementType -->
+
+	<!-- ============= -->
+	<xsd:complexType name="FilterElementType">
+		<xsd:attribute name="name" type="filterElementNameType"
+			use="required" />
+		<xsd:attribute name="value" type="filterElementValueType"
+			use="required" />
+		<xsd:attribute name="valueIsRegex" type="xsd:boolean"
+			use="optional" />
+	</xsd:complexType>
+	<!-- ==================== -->
+	<!-- AdvancedFilterElementType -->
+	<!-- ==================== -->
+
+	<xsd:complexType name="AdvancedFilterElementType">
+		<xsd:simpleContent>
+			<xsd:extension base="core:nonEmptyStringType">
+				<xsd:attribute name="queryId" type="core:nonEmptyStringType"
+					use="required" />
+				<xsd:attribute name="ql" type="queryLanguageAttrType"
+					use="required" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<!-- ============ -->
+
+	<!-- QueryFilterType -->
+	<!-- ============ -->
+	<xsd:complexType name="QueryFilterType">
+		<xsd:choice>
+			<xsd:element maxOccurs="unbounded" ref="FilterElement" />
+			<xsd:element maxOccurs="unbounded" ref="AdvancedFilterElement" />
+		</xsd:choice>
+		<xsd:attribute name="op" type="QueryFilterOpTypeEnumeration"
+			use="optional" />
+	</xsd:complexType>
+
+	<!-- ======================= -->
+	<!-- QueryFilterOpTypeEnumeration -->
+	<!-- ======================= -->
+	<xsd:simpleType name="QueryFilterOpTypeEnumeration">
+		<xsd:restriction base="core:nonEmptyStringType">
+			<xsd:enumeration value="include" />
+			<xsd:enumeration value="exclude" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+</xsd:schema>

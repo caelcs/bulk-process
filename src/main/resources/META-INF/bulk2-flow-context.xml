@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-2.0.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:annotation-config />
+	<bean id="bulkLoadConfig" class="com.motorola.medios.cis.content.bulk.BulkLoadConfig">
+		<property name="inProgressDir" value="${inProgressDir}" />
+		<property name="incomingPath" value="${incomingPath}" />
+		<property name="archivePath" value="${archivePath}" />
+		<property name="failedsPath" value="${failedsPath}" />
+		<property name="successPath" value="${successPath}" />
+	</bean>
+
+	<bean id="fileUtils" class="com.motorola.medios.cis.content.bulk.FileUtils" />
+
+	<bean id="initializeExecutor" class="com.motorola.medios.cis.content.bulk.InitializeExecutor" />
+	<bean id="contentWsExecutor" class="com.motorola.medios.cis.content.bulk.ContentWsExecutor" />
+	<bean id="jobInfoExecutor" class="com.motorola.medios.cis.content.bulk.JobInfoExecutor" />
+
+
+	<int:gateway id="importZipGateway"
+		service-interface="com.motorola.medios.cis.content.bulk.ImportZipGatway"
+		default-request-channel="inputZipPath"
+        default-reply-channel="replyChannel"/>
+
+	<int:channel id="inputZipPath" />
+    <int:channel id="replyChannel" />
+
+    <int:header-enricher input-channel="inputZipPath" output-channel="enricherMessage">
+        <int:header name="JOB_ID" method="getJobId" ref="jobInfoExecutor" />
+    </int:header-enricher>
+
+    <int:channel id="enricherMessage">
+        <int:queue capacity="10" />
+    </int:channel>
+
+    <int:outbound-channel-adapter channel="enricherMessage" ref="initializeExecutor"
+                                  method="process">
+        <int:poller task-executor="pool" fixed-rate="1000" />
+    </int:outbound-channel-adapter>
+
+	<int:channel id="fileToProcess">
+		<int:queue capacity="10" />
+	</int:channel>
+
+	<int:outbound-channel-adapter channel="fileToProcess" ref="contentWsExecutor"
+			method="process">
+			<int:poller task-executor="pool" fixed-rate="1000" />
+	</int:outbound-channel-adapter>
+
+	<task:executor id="pool" pool-size="25" queue-capacity="20"
+		keep-alive="120" />
+
+</beans>
